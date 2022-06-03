@@ -3,7 +3,12 @@
 from z3 import *
 import argparse
 import itertools
-import time
+
+def SumToOne(ls):
+    fs=[]
+    for i in range(len(ls)):
+        fs.append(And([ls[i]]+[Not(ls[j]) for j in range(len(ls)) if j!=i]))
+    return Or(fs)
 
 problem1 = [
  [ 9, 0, 0,   0, 1, 0,   5, 0, 0],
@@ -47,46 +52,50 @@ problem3 = [
 [ 5, 0, 0,   3, 0, 6,   0, 0, 2]
 ]
 
+# you can try different problem
+# eg: problem=problem2
 problem = problem1
 
-def sum_to_one(ls):
-    fs=[]
-    for i in range(len(ls)):
-        fs.append(And([ls[i]]+[Not(ls[j]) for j in range(len(ls)) if j!=i]))
-    ors=Or(fs)
-    return ors
-
-
+#s tarting solver
 s = Solver()
+
+# forming and naming variables
+# x_i_j_k represents i-th row and j-th column with value=k
+# if its boolean value is True. Then value at (i,j) box is equal to k
 vars=[[[Bool("x_%i_%i_%i" %(i,j,k)) for i in range(9)] for j in range(9)] for k in range(9)]
 
+# encoding the given condition of Sudoku
 for i in range(9):
     for j in range(9):
         e=problem[i][j]
         if e!=0:
             s.add([vars[i][j][e-1]])
-
+       
+# encoding There should be atleast one value to each (i,j) box 
 for i in range(9):
     for j in range(9):
         sum1=[]
         for k in range(9):
             sum1.append(vars[i][j][k])
-        s.add(sum_to_one(sum1))
-
+        s.add(SumToOne(sum1))
+   
+# encoding There should be each value from 1 to 9 in each column  exactly once
 for j in range(9):
     for k in range(9):
         sum2=[]
         for i in range(9):
             sum2.append(vars[i][j][k])
-        s.add(sum_to_one(sum2))
+        s.add(SumToOne(sum2))
 
+# encoding There should be each value from 1 to 9 in each row exactly once
 for i in range(9):
     for k in range(9):
         sum3=[]
         for j in range(9):
             sum3.append(vars[i][j][k])
-        s.add(sum_to_one(sum3))
+        s.add(SumToOne(sum3))
 
+# encoding There should be each value from 1 to 9 in each box exactly once  
 for k in range(9):
     for i in range(3):
         for j in range(3):
@@ -94,7 +103,7 @@ for k in range(9):
             for rr in range(3):
                 for cc in range(3):
                     sum4.append(vars[3*i+rr][3*j+cc][k])
-            s.add(sum_to_one(sum4))
+            s.add(SumToOne(sum4))
 
 if s.check() == sat:
     m = s.model()
