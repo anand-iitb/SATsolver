@@ -18,3 +18,6 @@ You have to colour all the vertex using **k** colours such that **there should n
 If You can colour using K-colours then it is K-colourable.
 I have decoded this problem in terms of boolean and solved using **Z3 SAT solver**.
 So I have tried to visualize the reultant colourfull graph using Networkx library. For trying, you can run the given code and follow the intructions given by output shell.
+
+This is a random graph having 20 Nodes and 50 edges.
+![Screenshot from 2022-06-22 18-40-29](https://user-images.githubusercontent.com/73160197/175037692-6d82f286-4a9b-4a60-ae8a-020cc2e2e24c.png)
