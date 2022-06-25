@@ -10,6 +10,7 @@ def SumToOne(ls):
         fs.append(And([ls[i]]+[Not(ls[j]) for j in range(len(ls)) if j!=i]))
     return Or(fs)
 
+# fill your custom sudoku here give the given values at non empty box and 0 for empty box
 problem1 = [
  [ 9, 0, 0,   0, 1, 0,   5, 0, 0],
  [ 7, 0, 0,   8, 0, 3,   0, 0, 2],
